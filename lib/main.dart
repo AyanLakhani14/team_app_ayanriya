@@ -1,3 +1,7 @@
+feature/theme-switcher
+
+import 'dart:math';
+main
 import 'package:flutter/material.dart';
 
 // Theme options
@@ -107,6 +111,10 @@ class HomePage extends StatelessWidget {
 
             const SizedBox(height: 30),
 
+feature/theme-switcher
+            
+            // Styled button + rotates quotes
+main
             ElevatedButton(
               onPressed: () {
                 debugPrint('Pressed!');
@@ -114,6 +122,7 @@ class HomePage extends StatelessWidget {
               child: const Text('Press Here!'),
             ),
 
+feature/theme-switcher
             const SizedBox(height: 30),
 
             const Text('Created by: Riya Dinani'),
@@ -161,6 +170,31 @@ class ProfileCard extends StatelessWidget {
                   style: const TextStyle(color: Colors.grey),
                 ),
               ],
+
+            // Icon Gallery (Row of 4–5 icons)
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [
+                Icon(Icons.sports_soccer, size: 32),
+                Icon(Icons.music_note, size: 32),
+                Icon(Icons.code, size: 32),
+                Icon(Icons.flight, size: 32),
+                Icon(Icons.fitness_center, size: 32),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Signature line
+            const Text(
+              'Created by: Ayan Lakhani',
+              style: TextStyle(
+                fontSize: 12,
+                fontStyle: FontStyle.italic,
+                color: Colors.grey,
+              ),
+main
             ),
           ],
         ),
