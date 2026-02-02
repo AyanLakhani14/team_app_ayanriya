@@ -1,131 +1,166 @@
-cat > lib/main.dart <<'EOF'
-import 'dart:math';
 import 'package:flutter/material.dart';
 
-// The main entry point of the app
+// Theme options
+final Map<String, MaterialColor> appThemes = {
+  'Purple': Colors.purple,
+  'Blue': Colors.blue,
+  'Green': Colors.green,
+};
+
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String _currentTheme = 'Purple';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My First Flutter App',
+      title: 'My Awesome App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: appThemes[_currentTheme],
       ),
-      home: const HomePage(),
       debugShowCheckedModeBanner: false,
+      home: HomePage(
+        currentTheme: _currentTheme,
+        onThemeChanged: (theme) {
+          setState(() {
+            _currentTheme = theme;
+          });
+        },
+      ),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  final String currentTheme;
+  final ValueChanged<String> onThemeChanged;
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final List<String> quotes = [
-    "Stay hungry. Stay foolish.",
-    "Code. Test. Improve. Repeat.",
-    "Small steps every day.",
-    "Discipline beats motivation.",
-    "Build first. Perfect later.",
-  ];
-
-  final Random _rng = Random();
-  String currentQuote = "";
-
-  @override
-  void initState() {
-    super.initState();
-    currentQuote = quotes.isNotEmpty ? quotes[0] : "";
-  }
-
-  void pickRandomQuote() {
-    if (quotes.isEmpty) return;
-
-    setState(() {
-      if (quotes.length == 1) {
-        currentQuote = quotes[0];
-        return;
-      }
-
-      String next;
-      do {
-        next = quotes[_rng.nextInt(quotes.length)];
-      } while (next == currentQuote);
-
-      currentQuote = next;
-    });
-  }
+  const HomePage({
+    super.key,
+    required this.currentTheme,
+    required this.onThemeChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome to Class'),
+        title: const Text('Flutter is Fun!'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Theme: '),
+                DropdownButton<String>(
+                  value: currentTheme,
+                  items: appThemes.keys
+                      .map(
+                        (theme) => DropdownMenuItem(
+                          value: theme,
+                          child: Text(theme),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      onThemeChanged(value);
+                    }
+                  },
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            const ProfileCard(
+              name: 'Riya Dinani',
+              major: 'Computer Science',
+            ),
+
+            const SizedBox(height: 20),
+
             const Text(
-              'Hello, Flutter!',
+              'Welcome to My App!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
+
             const SizedBox(height: 20),
+
             const Text(
-              'This is my first modification.',
+              "Let's learn Flutter together",
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            const SizedBox(height: 20),
 
-            // Motivational Quotes (below main text)
-            Card(
-              elevation: 3,
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  currentQuote.isEmpty ? "No quotes yet." : currentQuote,
-                  textAlign: TextAlign.center,
+            const SizedBox(height: 30),
+
+            ElevatedButton(
+              onPressed: () {
+                debugPrint('Pressed!');
+              },
+              child: const Text('Press Here!'),
+            ),
+
+            const SizedBox(height: 30),
+
+            const Text('Created by: Riya Dinani'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProfileCard extends StatelessWidget {
+  final String name;
+  final String major;
+
+  const ProfileCard({
+    super.key,
+    required this.name,
+    required this.major,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.all(16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            const Icon(Icons.person, size: 50),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontStyle: FontStyle.italic,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // TASK 8: Styled button + rotates quotes
-            ElevatedButton(
-              onPressed: pickRandomQuote,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('New Quote'),
-            ),
-
-            const SizedBox(height: 12),
-
-            // TASK 7: Signature line
-            const Text(
-              'Created by: Ayan Lakhani',
-              style: TextStyle(
-                fontSize: 12,
-                fontStyle: FontStyle.italic,
-                color: Colors.grey,
-              ),
+                const SizedBox(height: 4),
+                Text(
+                  'Major: $major',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ],
             ),
           ],
         ),
@@ -133,4 +168,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-EOF
