@@ -1,4 +1,3 @@
-cat > lib/main.dart <<'EOF'
 import 'dart:math';
 import 'package:flutter/material.dart';
 
@@ -106,7 +105,7 @@ class _HomePageState extends State<HomePage> {
 
             const SizedBox(height: 12),
 
-            // TASK 8: Styled button + rotates quotes
+            // Styled button + rotates quotes
             ElevatedButton(
               onPressed: pickRandomQuote,
               style: ElevatedButton.styleFrom(
@@ -116,9 +115,22 @@ class _HomePageState extends State<HomePage> {
               child: const Text('New Quote'),
             ),
 
+            // Icon Gallery (Row of 4–5 icons)
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [
+                Icon(Icons.sports_soccer, size: 32),
+                Icon(Icons.music_note, size: 32),
+                Icon(Icons.code, size: 32),
+                Icon(Icons.flight, size: 32),
+                Icon(Icons.fitness_center, size: 32),
+              ],
+            ),
+
             const SizedBox(height: 12),
 
-            // TASK 7: Signature line
+            // Signature line
             const Text(
               'Created by: Ayan Lakhani',
               style: TextStyle(
@@ -133,4 +145,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-EOF
