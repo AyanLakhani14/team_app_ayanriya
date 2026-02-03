@@ -1,204 +1,190 @@
-feature/theme-switcher
-
 import 'dart:math';
-main
 import 'package:flutter/material.dart';
 
-// Theme options
-final Map<String, MaterialColor> appThemes = {
-  'Purple': Colors.purple,
-  'Blue': Colors.blue,
-  'Green': Colors.green,
-};
-
+// Entry point
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  String _currentTheme = 'Purple';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Awesome App',
-      theme: ThemeData(
-        primarySwatch: appThemes[_currentTheme],
-      ),
+      title: 'My First Flutter App',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const HomePage(),
       debugShowCheckedModeBanner: false,
-      home: HomePage(
-        currentTheme: _currentTheme,
-        onThemeChanged: (theme) {
-          setState(() {
-            _currentTheme = theme;
-          });
-        },
-      ),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  final String currentTheme;
-  final ValueChanged<String> onThemeChanged;
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-  const HomePage({
-    super.key,
-    required this.currentTheme,
-    required this.onThemeChanged,
-  });
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // -------- Round 1: Motivational Quotes --------
+  final List<String> quotes = [
+    "Stay hungry. Stay foolish.",
+    "Code. Test. Improve. Repeat.",
+    "Small steps every day.",
+    "Discipline beats motivation.",
+    "Build first. Perfect later.",
+  ];
+
+  final Random _rng = Random();
+  String currentQuote = "";
+
+  // -------- Round 2: Text Input --------
+  final TextEditingController _textController = TextEditingController();
+  String _enteredText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    currentQuote = quotes.isNotEmpty ? quotes[0] : "";
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  void pickRandomQuote() {
+    if (quotes.isEmpty) return;
+
+    setState(() {
+      String next;
+      do {
+        next = quotes[_rng.nextInt(quotes.length)];
+      } while (next == currentQuote);
+
+      currentQuote = next;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter is Fun!'),
+        title: const Text('Welcome to Class'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Theme: '),
-                DropdownButton<String>(
-                  value: currentTheme,
-                  items: appThemes.keys
-                      .map(
-                        (theme) => DropdownMenuItem(
-                          value: theme,
-                          child: Text(theme),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      onThemeChanged(value);
-                    }
-                  },
-                ),
-              ],
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(height: 20),
 
-            const SizedBox(height: 20),
+              // Header
+              const Text(
+                'Hello, Flutter!',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
 
-            const ProfileCard(
-              name: 'Riya Dinani',
-              major: 'Computer Science',
-            ),
+              const SizedBox(height: 10),
 
-            const SizedBox(height: 20),
+              const Text(
+                'This is my first modification.',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
 
-            const Text(
-              'Welcome to My App!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+              const SizedBox(height: 20),
 
-            const SizedBox(height: 20),
-
-            const Text(
-              "Let's learn Flutter together",
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-
-            const SizedBox(height: 30),
-
-feature/theme-switcher
-            
-            // Styled button + rotates quotes
-main
-            ElevatedButton(
-              onPressed: () {
-                debugPrint('Pressed!');
-              },
-              child: const Text('Press Here!'),
-            ),
-
-feature/theme-switcher
-            const SizedBox(height: 30),
-
-            const Text('Created by: Riya Dinani'),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ProfileCard extends StatelessWidget {
-  final String name;
-  final String major;
-
-  const ProfileCard({
-    super.key,
-    required this.name,
-    required this.major,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.all(16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            const Icon(Icons.person, size: 50),
-            const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+              // -------- Motivational Quotes --------
+              Card(
+                elevation: 3,
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    currentQuote,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Major: $major',
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
-
-            // Icon Gallery (Row of 4–5 icons)
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                Icon(Icons.sports_soccer, size: 32),
-                Icon(Icons.music_note, size: 32),
-                Icon(Icons.code, size: 32),
-                Icon(Icons.flight, size: 32),
-                Icon(Icons.fitness_center, size: 32),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // Signature line
-            const Text(
-              'Created by: Ayan Lakhani',
-              style: TextStyle(
-                fontSize: 12,
-                fontStyle: FontStyle.italic,
-                color: Colors.grey,
               ),
-main
-            ),
-          ],
+
+              const SizedBox(height: 10),
+
+              ElevatedButton(
+                onPressed: pickRandomQuote,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('New Quote'),
+              ),
+
+              const SizedBox(height: 20),
+
+              // -------- Icon Gallery --------
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: const [
+                  Icon(Icons.sports_soccer, size: 32),
+                  Icon(Icons.music_note, size: 32),
+                  Icon(Icons.code, size: 32),
+                  Icon(Icons.flight, size: 32),
+                  Icon(Icons.fitness_center, size: 32),
+                ],
+              ),
+
+              const SizedBox(height: 30),
+
+              // -------- Text Input Field --------
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: _textController,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter text',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _enteredText = value;
+                    });
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              Text(
+                _enteredText.isEmpty
+                    ? "You haven't typed anything yet."
+                    : "You typed: $_enteredText",
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: 30),
+
+              // Footer
+              const Text(
+                'Created by: Ayan Lakhani',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.grey,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
